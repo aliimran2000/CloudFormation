@@ -2,18 +2,45 @@ Parameters:
   MyAMIID:
     Description: "this is my ami"
     Type: String
-    Default: "ami-random"
+  
+  MyKeyPair:
+    Description: "this is my keypair"
+    Type: String
+
+  FiletoDownload:
+    Description: "this is file to download"
+    Type: String
+
+  DBHost:
+    Description: "DBHOST Name"
+    Type: String
+  DBPASS:
+    Description: "DB Password"
+    Type: String
+  DBUSER:
+    Description: "DB User"
+    Type: String
+
+
+
 Resources:
   myEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: !Ref MyAMIID
       UserData:
-        Fn::Base64: |
-          #!/bin/bash -ex
-          ls
-          EOF
-      KeyName: MyKey
+        Fn::Base64: !Sub |
+            #!/bin/bash
+            sudo apt update -y 
+            sudo apt install mysql-client-core-8.0 -y
+            sudo apt-get install zip unzip
+            wget ${FiletoDownload} -O db.zip
+            unzip db.zip
+            mysql -u ${DBUSER} --password=${DBPASS} -h ${DBHost} < sample-schema.sql
+            mysql -u ${DBUSER} --password=${DBPASS} -h ${DBHost} < sample-data.sql
+            shutdown -P now
+            EOF
+      KeyName: !Ref MyKeyPair
       InstanceType: t2.micro
       Tags:
         - Key: Name
@@ -28,7 +55,7 @@ Resources:
       GroupDescription: Allow SSH from anywhere
 
       SecurityGroupIngress:
-        IpProtocol: tcp
-        ToPort: "22"
-        FromPort: "22"
-        CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          ToPort: "22"
+          FromPort: "22"
+          CidrIp: 0.0.0.0/0

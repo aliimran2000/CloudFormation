@@ -1,6 +1,10 @@
     [
         {
-            "ParameterKey": "MyAMIID",
-            "ParameterValue": "Suspended"
+            "ParameterKey": "UNAME",
+            "ParameterValue": "myuser"
+        },
+        {
+            "ParameterKey": "PASS",
+            "ParameterValue": "mypass12345"
         }
     ]

@@ -1,34 +1,41 @@
 Parameters:
-  MyAMIID:
-    Description: "this is my ami"
-    Type: String
-    Default: "ami-random"
+    BucketVersioningConfiguration:
+        Description: Bucket versioning
+        Type: String
+    
+
 Resources:
-  myEC2Instance:
-    Type: AWS::EC2::Instance
-    Properties:
-      ImageId: !Ref MyAMIID
-      UserData:
-        Fn::Base64: |
-          #!/bin/bash -ex
-          ls
-          EOF
-      KeyName: MyKey
-      InstanceType: t2.micro
-      Tags:
-        - Key: Name
-          Value: Lambda
-      SecurityGroups:
-        - !Ref mySecurityGroup
+    S3Bucket:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            AccessControl: PublicRead
+            PublicAccessBlockConfiguration:
+                BlockPublicAcls: false
+                BlockPublicPolicy: false
+                IgnorePublicAcls: false
+                RestrictPublicBuckets: false
+            VersioningConfiguration:
+                Status: !Ref BucketVersioningConfiguration
+            Tags:
+                - Key: Name
+                  Value: Lambda
 
-  mySecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: EC2_SSH
-      GroupDescription: Allow SSH from anywhere
+    PublicBucketPolicy:
+        Type: AWS::S3::BucketPolicy
+        Properties:
+            Bucket: !Ref S3Bucket
 
-      SecurityGroupIngress:
-        IpProtocol: tcp
-        ToPort: "22"
-        FromPort: "22"
-        CidrIp: 0.0.0.0/0
+            PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    Effect: Allow
+                    Action:
+                        - "s3:GetObject"
+                    Resource:
+                        - !Join ["/", [!GetAtt [S3Bucket, Arn], "*"]]
+                    Principal: "*"
+
+Outputs:
+    S3BucketName:
+        Description: Name of the S3 bucket
+        Value: !Ref S3Bucket

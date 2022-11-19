@@ -1,6 +1,6 @@
     [
         {
-            "ParameterKey": "MyAMIID",
+            "ParameterKey": "BucketVersioningConfiguration",
             "ParameterValue": "Suspended"
         }
     ]
