@@ -1,0 +1,34 @@
+Parameters:
+  MyAMIID:
+    Description: "this is my ami"
+    Type: String
+    Default: "ami-random"
+Resources:
+  myEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref MyAMIID
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash -ex
+          ls
+          EOF
+      KeyName: MyKey
+      InstanceType: t2.micro
+      Tags:
+        - Key: Name
+          Value: Lambda
+      SecurityGroups:
+        - !Ref mySecurityGroup
+
+  mySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: EC2_SSH
+      GroupDescription: Allow SSH from anywhere
+
+      SecurityGroupIngress:
+        IpProtocol: tcp
+        ToPort: "22"
+        FromPort: "22"
+        CidrIp: 0.0.0.0/0
