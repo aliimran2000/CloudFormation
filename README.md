@@ -30,9 +30,6 @@ For deployment I wrote my own bash script and a utility node js script for JSON 
     - zip file link
 
 # What More could be done ?
-The Directory structure and general code can be cleaned up , if the requirement for having seperate template files is removed . For now my S3 bucket and RDS is publicly accessible however it should not be so , the infrastructure should be setup in a vpc and security groups should be configured to allow for only one ingress rule that is the RDS MySQL server just to see if the DB was dumped correctly.
-
-A Cleanup scrupt can also be included to close down resources if they are no longer needed , such as the S3 bucket. StackSets and StackInstances can also be integrated if this is a repeated task .
-
-
+The Directory structure and general code can be cleaned up , if the requirement for having separate template files is removed.
+For now my S3 bucket is publicly accessible (READONLY) however it should not be so.
 

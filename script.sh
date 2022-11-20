@@ -41,7 +41,7 @@ echo "params configured"
 echo "provsioning EC2 ..."
 EC2=$(aws cloudformation create-stack --stack-name EC2Stack --template-body file://EC2/template.yaml --parameters file://EC2/parameters.json --output text)
 echo "EC2 Stack has been initiated : ${EC2}"
-echo "Waiting for Succesfuly Creation"
+echo "Waiting for Succesful Creation"
 aws cloudformation wait stack-create-complete --stack-name $EC2
 echo "All resources were created succesfully"
 

@@ -18,6 +18,7 @@ Resources:
       MasterUserPassword: !Ref PASS
       VPCSecurityGroups:
         - Fn::GetAtt: [ RDSSecurityGroup, GroupId ]
+      PubliclyAccessible : false
     DeletionPolicy: Snapshot
 
   RDSSecurityGroup:
