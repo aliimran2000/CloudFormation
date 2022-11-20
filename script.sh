@@ -1,10 +1,10 @@
 #! /bin/bash
 
 VAR1=$(aws cloudformation create-stack --stack-name S3STACK --template-body file://S3/template.yaml --parameters file://S3/parameters.json --output text )
-VAR2=$(aws cloudformation create-stack --stack-name RDSSTACK --template-body file://RDS/template.yaml --parameters file://RDS/parameters.json --output text )
+VAR2=$(aws cloudformation create-stack --stack-name RDSSTACK1 --template-body file://RDS/template.yaml --parameters file://RDS/parameters.json --output text )
 aws cloudformation wait stack-create-complete --stack-name $VAR1
 echo "S3 Bucket Created"
-#---------------------------------------------------
+#---------------------------------------------------RDSSTACK_1
 #fetching bucket name
 BUCKET_NAME=$(aws cloudformation describe-stacks --stack-name S3STACK --query "Stacks[0].Outputs[0].OutputValue")
 BUCKET_NAME=${BUCKET_NAME%*\"}
@@ -26,7 +26,7 @@ aws cloudformation wait stack-create-complete --stack-name $VAR2
 echo "MYSQL RDS Created"
 
 
-DB_HOST=$(aws cloudformation describe-stacks --stack-name RDSSTACK --query "Stacks[0].Outputs[0].OutputValue")
+DB_HOST=$(aws cloudformation describe-stacks --stack-name RDSSTACK1 --query "Stacks[0].Outputs[0].OutputValue")
 echo $DB_HOST
 DB_HOST=${DB_HOST%*\"}
 echo $DB_HOST
